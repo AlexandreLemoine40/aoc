@@ -5,6 +5,7 @@ const input = fs.readFileSync('./input.txt').toString()
 let validMultipliers
 let doOrder
 let dontOrder
+let skipNext = false
 
 // The regex has to be stored in a value in order to iterate over the string
 // If it is re-instantiated everytime, it will be considered new and don't go through the whole string
@@ -50,26 +51,13 @@ statements.sort((a, b) => {
   return 0
 })
 
-let skipNext = false
-
 for (let i = 0; i < statements.length; i++) {
   const current = statements[i]
 
   if (current.order) {
-    if (current.order === 'DO') {
-      skipNext = false
-    } else {
-      skipNext = true
-    }
-    continue
-  }
-
-  if (current.multiplier) {
-    if (!skipNext) {
-      sum += current.multiplier
-    } else {
-      continue
-    }
+    skipNext = current.order != 'DO'
+  } else if (!skipNext) {
+    sum += current.multiplier
   }
 }
 
